@@ -1,0 +1,26 @@
+name: super_tic_tac_toe
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/cartoon-1.png
+    - assets/images/cartoon-2.png
+    - assets/images/cartoon-3.png
+    - assets/images/cartoon-4.png
+    - assets/images/cartoon-5.png
+    - assets/images/cartoon-10.png
