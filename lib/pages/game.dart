@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:super_tic_tac_toe/ui/block.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -35,8 +36,11 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    // List x = [];
-    // List o = [];
+    List x = [];
+    List o = [];
+    List pointforX = [];
+    bool isXTurn = true;
+    List<String> board = List.filled(81, '');
     // final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -67,29 +71,27 @@ class _GameState extends State<Game> {
 
         // papan permainan
         Center(
-          child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 9,
+          child: Container(
+            margin: EdgeInsets.all(5),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 9,
+              ),
+              itemCount: 81,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                    onTap: () {
+                      if (board[index].isEmpty) {
+                        setState(() {
+                          board[index] = isXTurn ? 'X' : 'O';
+                          isXTurn = !isXTurn;
+                        });
+                      }
+                    },
+                    child: Block(position: index, value: board[index]));
+              },
             ),
-            itemCount: 81,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    margin: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        color: index % 2 == 0 ? Colors.grey : Colors.white),
-                    child: Center(
-                      child: Text("${index + 1}",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w200,
-                          )),
-                    ),
-                  ));
-            },
           ),
         ),
 

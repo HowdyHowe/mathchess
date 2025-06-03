@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,7 +38,7 @@ class _HomeState extends State<Home> {
       children: [
         AnimatedOpacity(
           opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 1000),
+          duration: Duration(milliseconds: 1500),
           child: Text(
             '6',
             style: TextStyle(
