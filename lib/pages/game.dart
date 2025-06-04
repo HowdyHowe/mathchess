@@ -9,6 +9,12 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
+  List x = [];
+  List o = [];
+  List pointforX = [];
+  bool isXTurn = true;
+  List<String> board = List.filled(81, "");
+
   @override
   void initState() {
     // TODO: implement initState
@@ -36,38 +42,31 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    List x = [];
-    List o = [];
-    List pointforX = [];
-    bool isXTurn = true;
-    List<String> board = List.filled(81, '');
-    // final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // // tombol kembali
-        // GestureDetector(
-        //   onTap: () {
-        //     Navigator.pop(context);
-        //   },
-        //   child: Container(
-        //       margin: EdgeInsets.all(5),
-        //       height: 50,
-        //       width: 50,
-        //       decoration: BoxDecoration(
-        //         color: Colors.purple,
-        //         borderRadius: BorderRadius.circular(10),
-        //       ),
-        //       child: Center(
-        //         child: Text(
-        //           "<",
-        //           style: TextStyle(color: Colors.white, fontSize: 20),
-        //         ),
-        //       )),
-        // ),
+        // tombol kembali
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+              margin: EdgeInsets.all(5),
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                color: Colors.purple,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  "<",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              )),
+        ),
 
         // papan permainan
         Center(
@@ -82,14 +81,22 @@ class _GameState extends State<Game> {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                     onTap: () {
-                      if (board[index].isEmpty) {
+                      if (board[index] == "") {
                         setState(() {
-                          board[index] = isXTurn ? 'X' : 'O';
+                          board[index] = isXTurn ? "X" : "O";
                           isXTurn = !isXTurn;
                         });
                       }
                     },
-                    child: Block(position: index, value: board[index]));
+                    child: Block(
+                        position: index,
+                        value:
+                            "${board[index] == "" ? index + 1 : board[index]}",
+                        textstyle: board[index] == ""
+                            ? TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w200)
+                            : TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w400)));
               },
             ),
           ),
