@@ -36,18 +36,6 @@ class _HomeState extends State<Home> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        AnimatedOpacity(
-          opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 1500),
-          child: Text(
-            '6',
-            style: TextStyle(
-              fontSize: 100,
-              color: const Color.fromARGB(255, 0, 0, 0),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
         GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, '/game');
@@ -64,6 +52,27 @@ class _HomeState extends State<Home> {
                 child: Center(
                   child: Text(
                     "Mulai",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                )),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/test');
+          },
+          child: Center(
+            child: Container(
+                margin: EdgeInsets.all(10),
+                height: 75,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.purple,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "test",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 )),
