@@ -1,8 +1,14 @@
+// IMPORTANT
+// BASIS NOMOR YANG DIGUNAKAN ADALAH DARI 1 BUKAN DARI 0.
+// SELALU SESUAIKAN CODE NYA
+
 import 'dart:async';
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:super_tic_tac_toe/ui/block.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:super_tic_tac_toe/ui/scoreboard.dart';
+import 'package:super_tic_tac_toe/ui/animatedbutton.dart';
+import 'package:super_tic_tac_toe/ui/alert.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -16,10 +22,16 @@ class _GameState extends State<Game> {
   List o = [];
   int pointforX = 0;
   int pointforO = 0;
+  int turnCount = 0;
+  int numberA = 0;
+  int numberB = 0;
+  int autoReset = 0;
+  bool readyA = false;
+  bool readyB = false;
   bool isXTurn = true;
   bool _isVisible = true;
-  String numberA = "";
-  String numberB = "";
+  String textCount = "X";
+  String whosPlaying = "X";
   late Timer _timer;
   List<String> board = List.filled(81, "");
 
@@ -32,23 +44,12 @@ class _GameState extends State<Game> {
       });
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Super Tic Tac Toe"),
-              content: Text("Selamat datang di permainan Super Tic Tac Toe!"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await showGameAlert(
+          context, "Selamat Datang", "Ayo kita Mulai bermain MathChess 🎮");
+      await Future.delayed(Duration(milliseconds: 300));
+      await showGameAlert(
+          context, "TIM A MULAI", "Tim A Dipersilahkan Memilih Angka");
     });
   }
 
@@ -58,8 +59,105 @@ class _GameState extends State<Game> {
     super.dispose();
   }
 
+  void checkBoard() {
+    for (var i in x) {
+      if (board[i - 1] == "") {
+        setState(() {
+          board[i - 1] = "X";
+        });
+      }
+    }
+    for (var i in o) {
+      if (board[i - 1] == "") {
+        setState(() {
+          board[i - 1] = "O";
+        });
+      }
+    }
+  }
+
+  void changeNumber(int index) {
+    if (textCount == "X") {
+      numberA = index + 1;
+    }
+    if (textCount == "O") {
+      numberB = index + 1;
+    }
+  }
+
+  bool currentPlayer(int turn) {
+    int patternIndex = turn % 4;
+    if (patternIndex == 0 || patternIndex == 3) {
+      textCount = "X";
+      return true;
+    } else {
+      textCount = "O";
+      return false;
+    }
+  }
+
+  Future<void> calculateSum(bool statA, bool statB, int numA, int numB) async {
+    if (statA && statB) {
+      int sum = (numA * numB);
+
+      if (whosPlaying == "X") {
+        if (x.contains(sum) || o.contains(sum)) {
+          readyA = false;
+          readyB = false;
+          numberA = 0;
+          numberB = 0;
+          whosPlaying = "O";
+          await Future.delayed(Duration(milliseconds: 300));
+          await showGameAlert(context, "TIM A GAGAL ❌",
+              "Angka Yang Dipilih Sudah Ada di Papan.");
+          return;
+        } else {
+          x.add(sum);
+          readyA = false;
+          readyB = false;
+          numberA = 0;
+          numberB = 0;
+          whosPlaying = "O";
+
+          checkBoard();
+          await Future.delayed(Duration(milliseconds: 300));
+          await showGameAlert(context, "TIM A BERHASIL ✔️",
+              "Angka Yang Dipilih Berhasil Dimasukkan ke Papan.");
+        }
+      } else if (whosPlaying == "O") {
+        if (x.contains(sum) || o.contains(sum)) {
+          readyA = false;
+          readyB = false;
+          numberA = 0;
+          numberB = 0;
+          whosPlaying = "O";
+          await Future.delayed(Duration(milliseconds: 300));
+          await showGameAlert(context, "TIM B GAGAL ❌",
+              "Angka Yang Dipilih Sudah Ada di Papan.");
+          return;
+        } else {
+          o.add(sum);
+          readyA = false;
+          readyB = false;
+          numberA = 0;
+          numberB = 0;
+          whosPlaying = "X";
+
+          checkBoard();
+          await Future.delayed(Duration(milliseconds: 300));
+          await showGameAlert(context, "TIM B BERHASIL ✔️",
+              "Angka Yang Dipilih Berhasil Dimasukkan ke Papan.");
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    print(x);
+    print(o);
+
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 53, 47, 68),
         body: Column(
@@ -81,7 +179,7 @@ class _GameState extends State<Game> {
                         Navigator.pop(context);
                       },
                       child: Container(
-                          margin: EdgeInsets.all(3),
+                          margin: EdgeInsets.symmetric(horizontal: 5),
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
@@ -122,7 +220,7 @@ class _GameState extends State<Game> {
                       shadows: List.filled(
                           1,
                           Shadow(
-                            color: const Color.fromARGB(20, 250, 240, 230),
+                            color: const Color.fromARGB(50, 250, 240, 230),
                             offset: Offset(0, 0),
                             blurRadius: 30,
                           )),
@@ -143,7 +241,7 @@ class _GameState extends State<Game> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                      margin: EdgeInsets.all(3),
+                      margin: EdgeInsets.symmetric(horizontal: 5),
                       height: 40,
                       width: 40,
                       decoration: BoxDecoration(
@@ -172,7 +270,7 @@ class _GameState extends State<Game> {
                   shadows: List.filled(
                       1,
                       Shadow(
-                        color: const Color.fromARGB(20, 250, 240, 230),
+                        color: const Color.fromARGB(50, 250, 240, 230),
                         offset: Offset(0, 2),
                         blurRadius: 20,
                       )),
@@ -187,87 +285,14 @@ class _GameState extends State<Game> {
             Row(
               children: [
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    height: 100,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 250, 240, 230),
-                          width: 3,
-                        )),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "X",
-                          style: GoogleFonts.fredoka(
-                            textStyle: TextStyle(
-                              fontSize: 40,
-                              shadows: List.filled(
-                                  1,
-                                  Shadow(
-                                    color:
-                                        const Color.fromARGB(20, 250, 240, 230),
-                                    offset: Offset(0, 0),
-                                    blurRadius: 30,
-                                  )),
-                              color: const Color.fromARGB(255, 255, 99, 99),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Tim A: ",
-                              style: GoogleFonts.fredoka(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  shadows: List.filled(
-                                      1,
-                                      Shadow(
-                                        color: const Color.fromARGB(
-                                            20, 250, 240, 230),
-                                        offset: Offset(0, 0),
-                                        blurRadius: 30,
-                                      )),
-                                  color:
-                                      const Color.fromARGB(255, 250, 240, 230),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "${pointforX}",
-                              style: GoogleFonts.fredoka(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  shadows: List.filled(
-                                      1,
-                                      Shadow(
-                                        color: const Color.fromARGB(
-                                            20, 250, 240, 230),
-                                        offset: Offset(0, 0),
-                                        blurRadius: 30,
-                                      )),
-                                  color:
-                                      const Color.fromARGB(255, 250, 240, 230),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                    child: ScoreBoard(
+                  text: "Tim A: ",
+                  symbol: "X",
+                  pointfor: pointforO,
+                  symbolColor: const Color.fromARGB(255, 250, 99, 99),
+                )),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
                     "VS",
                     style: GoogleFonts.fredoka(
@@ -280,17 +305,12 @@ class _GameState extends State<Game> {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    height: 100,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 250, 240, 230),
-                          width: 3,
-                        )),
-                  ),
-                ),
+                    child: ScoreBoard(
+                  text: "Tim B: ",
+                  symbol: "O",
+                  pointfor: pointforX,
+                  symbolColor: const Color.fromARGB(255, 0, 215, 255),
+                )),
               ],
             ),
 
@@ -312,70 +332,27 @@ class _GameState extends State<Game> {
                 itemCount: 81,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
-                      onTap: () {
-                        if (board[index] == "") {
-                          setState(() {
-                            board[index] = isXTurn ? "X" : "O";
-                            isXTurn = !isXTurn;
-                          });
-                        }
-                      },
-                      child: Block(
-                          position: index,
-                          value:
-                              "${board[index] == "" ? index + 1 : board[index]}",
-                          textwidget: AnimatedSwitcher(
-                              duration: Duration(milliseconds: 250),
-                              switchInCurve: Curves.easeInOutBack,
-                              transitionBuilder:
-                                  (Widget child, Animation<double> animation) {
-                                return ScaleTransition(
-                                    scale: animation, child: child);
-                              },
-                              child: board[index] == ""
-                                  ? AnimatedOpacity(
-                                      opacity: _isVisible ? 1.0 : 0.0,
-                                      duration: Duration(milliseconds: 1500),
-                                      child: Opacity(
-                                        opacity: 0.4,
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: GoogleFonts.chewy(
-                                              textStyle: TextStyle(
-                                            fontSize: 15,
-                                            color: index % 2 == 0
-                                                ? const Color.fromARGB(
-                                                    255, 250, 240, 230)
-                                                : const Color.fromARGB(
-                                                    255, 53, 47, 58),
-                                            fontWeight: FontWeight.w200,
-                                          )),
-                                        ),
-                                      ),
-                                    )
-                                  : Text(
-                                      board[index],
-                                      key: ValueKey(board[index]),
-                                      style: GoogleFonts.fredoka(
-                                        textStyle: TextStyle(
-                                          fontSize: 30,
-                                          shadows: List.filled(
-                                              1,
-                                              Shadow(
-                                                color: const Color.fromARGB(
-                                                    192, 68, 68, 68),
-                                                offset: Offset(0, 2),
-                                                blurRadius: 10,
-                                              )),
-                                          color: board[index] == "X"
-                                              ? const Color.fromARGB(
-                                                  255, 255, 99, 99)
-                                              : const Color.fromARGB(
-                                                  255, 0, 215, 255),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ))));
+                    onTap: () {
+                      print("telah ditekan ${index}");
+                      if (board[index] == "") {
+                        bool thisTurn = currentPlayer(turnCount);
+                        setState(() {
+                          board[index] = thisTurn ? "X" : "O";
+                          numberA = 0;
+                          numberB = 0;
+                          turnCount++;
+                          isXTurn = currentPlayer(
+                              turnCount); // for showing current turn in UI
+                        });
+                      }
+                    },
+                    child: Block(
+                      index: index,
+                      boardIndex: board[index],
+                      isVisible: _isVisible,
+                      value: "${board[index] == "" ? index + 1 : board[index]}",
+                    ),
+                  );
                 },
               ),
             ),
@@ -390,14 +367,21 @@ class _GameState extends State<Game> {
                   ),
                   itemCount: 9,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                      ),
-                      child: Image.asset(
-                        "assets/images/cartoon-${index + 1}.png",
-                        fit: BoxFit.cover,
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          changeNumber(index);
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                        ),
+                        child: Image.asset(
+                          "assets/images/cartoon-${index + 1}.png",
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     );
                   },
@@ -411,38 +395,111 @@ class _GameState extends State<Game> {
             ),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Opacity(
-                  opacity: 0.7,
-                  child: Container(
-                      child: numberA == ""
-                          ? Image.asset("assets/images/cartoon-0.png",
-                              width: 60)
-                          : Image.asset(
-                              numberA,
-                              width: 60,
-                            )),
+                Container(
+                  width: screenWidth * 0.25,
+                  height: 100,
+                  child: AnimatedButton(
+                    textButton: "Tim  A\nSiap",
+                    boxColor: const Color.fromARGB(255, 255, 99, 99),
+                    onTap: () async {
+                      if (isXTurn) {
+                        if (numberA == 0) {
+                          showGameAlert(context, "TIM A PILIH ULANG",
+                              "Harus Memilih Angka 1 Sampai 9.");
+                          return;
+                        } else {
+                          setState(() {
+                            readyA = true;
+                            turnCount++;
+                            isXTurn = currentPlayer(turnCount);
+                          });
+                          await showGameAlert(context, "TIM A SIAP",
+                              "Tim A telah Memilih angka.");
+                          await calculateSum(readyA, readyB, numberA, numberB);
+                          await Future.delayed(Duration(milliseconds: 300));
+                          await showGameAlert(
+                              context,
+                              "TIM ${isXTurn ? "A" : "B"} MULAI",
+                              "Tim ${isXTurn ? "A" : "B"} Dipersilahkan Memilih Angka.");
+                        }
+                      }
+                    },
+                  ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("X",
-                      style: GoogleFonts.caveatBrush(
-                          textStyle: TextStyle(
-                              color: const Color.fromARGB(255, 250, 240, 230),
-                              fontSize: 40))),
+                  width: screenWidth * 0.4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Opacity(
+                        opacity: 0.7,
+                        child: Container(
+                            child: numberA == ""
+                                ? Image.asset("assets/images/cartoon-0.png",
+                                    width: 60)
+                                : Image.asset(
+                                    "assets/images/cartoon-${numberA}.png",
+                                    width: 60,
+                                  )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text("X",
+                            style: GoogleFonts.caveatBrush(
+                                textStyle: TextStyle(
+                                    color: const Color.fromARGB(
+                                        255, 250, 240, 230),
+                                    fontSize: 40))),
+                      ),
+                      Opacity(
+                        opacity: 0.7,
+                        child: Container(
+                            child: numberB == ""
+                                ? Image.asset("assets/images/cartoon-0.png",
+                                    width: 60)
+                                : Image.asset(
+                                    "assets/images/cartoon-${numberB}.png",
+                                    width: 60,
+                                  )),
+                      ),
+                    ],
+                  ),
                 ),
-                Opacity(
-                  opacity: 0.7,
-                  child: Container(
-                      child: numberB == ""
-                          ? Image.asset("assets/images/cartoon-0.png",
-                              width: 60)
-                          : Image.asset(
-                              numberB,
-                              width: 60,
-                            )),
+                Container(
+                  width: screenWidth * 0.25,
+                  height: 100,
+                  child: AnimatedButton(
+                    textButton: "Tim B\nSiap",
+                    boxColor: Color.fromARGB(255, 0, 215, 255),
+                    onTap: () async {
+                      if (!isXTurn) {
+                        if (numberB == 0) {
+                          showGameAlert(context, "TIM B PILIH ULANG",
+                              "Harus Memilih Angka 1 Sampai 9.");
+                          return;
+                        } else {
+                          print("sudah masuk B");
+                          setState(() {
+                            readyB = true;
+                            turnCount++;
+                            isXTurn = currentPlayer(turnCount);
+                          });
+                          await showGameAlert(context, "TIM B SIAP",
+                              "Tim B telah Memilih angka.");
+                          await calculateSum(readyA, readyB, numberA, numberB);
+                          await Future.delayed(Duration(milliseconds: 300));
+                          await showGameAlert(
+                              context,
+                              "TIM ${isXTurn ? "A" : "B"} MULAI",
+                              "Tim ${isXTurn ? "A" : "B"} Dipersilahkan Memilih Angka.");
+                        }
+                      }
+                    },
+                  ),
                 ),
               ],
             )

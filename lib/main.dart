@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:super_tic_tac_toe/pages/game.dart';
 import 'package:super_tic_tac_toe/pages/home.dart';
-import 'package:super_tic_tac_toe/ui/test.dart';
+import 'package:super_tic_tac_toe/test.dart';
 
 void main() async {
   runApp((MathChess()));
@@ -26,7 +26,7 @@ class _MathChessState extends State<MathChess> {
         routes: {
           '/': (context) => Home(),
           '/game': (context) => Game(),
-          '/test': (context) => AnimatedBoxApp()
+          '/test': (context) => Test()
         });
   }
 }
