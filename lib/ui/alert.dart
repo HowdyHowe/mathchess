@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Future<void> showGameAlert(BuildContext context, String title, String message,
-    {VoidCallback? onPressed}) {
+    {VoidCallback? onPressed, Color? titleColor}) {
   return showGeneralDialog(
     context: context,
     barrierDismissible: false,
@@ -26,7 +26,7 @@ Future<void> showGameAlert(BuildContext context, String title, String message,
               style: GoogleFonts.fredoka(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: titleColor ?? Colors.white,
               ),
             ),
           ),
