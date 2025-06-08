@@ -32,6 +32,7 @@ Future<void> showGameAlert(BuildContext context, String title, String message,
           ),
           content: Text(
             message,
+            textAlign: TextAlign.center,
             style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white70),
           ),
           actions: [

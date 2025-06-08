@@ -4,14 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 class Block extends StatefulWidget {
   final int index;
   final String boardIndex;
-  final String value;
+  // final String value;
   final bool isVisible;
+  final int number;
   const Block({
     super.key,
-    required this.value,
+    // required this.value,
     required this.index,
     required this.boardIndex,
     required this.isVisible,
+    required this.number,
   });
 
   @override
@@ -21,13 +23,15 @@ class Block extends StatefulWidget {
 class _BlockState extends State<Block> {
   @override
   Widget build(BuildContext context) {
+    bool isLightSquare = ((widget.index ~/ 6) + (widget.index % 6)) % 2 == 0;
     return Container(
-      margin: EdgeInsets.all(1),
+      margin: EdgeInsets.all(2),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: widget.index % 2 == 0
-              ? const Color.fromARGB(255, 53, 47, 58)
-              : const Color.fromARGB(255, 250, 240, 230)),
+        borderRadius: BorderRadius.circular(5),
+        color: isLightSquare
+            ? const Color.fromARGB(255, 250, 240, 230)
+            : const Color.fromARGB(255, 53, 47, 58),
+      ),
       child: Center(
         child: AnimatedSwitcher(
             duration: Duration(milliseconds: 250),
@@ -42,13 +46,13 @@ class _BlockState extends State<Block> {
                     child: Opacity(
                       opacity: 0.4,
                       child: Text(
-                        '${widget.index + 1}',
+                        '${widget.number}',
                         style: GoogleFonts.chewy(
                             textStyle: TextStyle(
                           fontSize: 15,
-                          color: widget.index % 2 == 0
-                              ? const Color.fromARGB(255, 250, 240, 230)
-                              : const Color.fromARGB(255, 53, 47, 58),
+                          color: isLightSquare
+                              ? const Color.fromARGB(255, 53, 47, 58)
+                              : const Color.fromARGB(255, 250, 240, 230),
                           fontWeight: FontWeight.w200,
                         )),
                       ),

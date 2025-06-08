@@ -26,7 +26,7 @@ class _MathChessState extends State<MathChess> {
         routes: {
           '/': (context) => Home(),
           '/game': (context) => Game(),
-          '/test': (context) => Test()
+          // '/test': (context) => Test()
         });
   }
 }

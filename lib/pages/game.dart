@@ -3,7 +3,9 @@
 // SELALU SESUAIKAN CODE NYA
 
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:super_tic_tac_toe/structure/list.dart';
 import 'package:super_tic_tac_toe/ui/block.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:super_tic_tac_toe/ui/scoreboard.dart';
@@ -33,7 +35,7 @@ class _GameState extends State<Game> {
   String textCount = "X";
   String whosPlaying = "X";
   late Timer _timer;
-  List<String> board = List.filled(81, "");
+  List<String> board = List.filled(36, "");
 
   @override
   void initState() {
@@ -61,16 +63,18 @@ class _GameState extends State<Game> {
 
   void checkBoard() {
     for (var i in x) {
-      if (board[i - 1] == "") {
+      int position = customNumbers.indexOf(i);
+      if (board[position] == "") {
         setState(() {
-          board[i - 1] = "X";
+          board[position] = "X";
         });
       }
     }
     for (var i in o) {
-      if (board[i - 1] == "") {
+      int position = customNumbers.indexOf(i);
+      if (board[position] == "") {
         setState(() {
-          board[i - 1] = "O";
+          board[position] = "O";
         });
       }
     }
@@ -99,54 +103,198 @@ class _GameState extends State<Game> {
   Future<void> calculateSum(bool statA, bool statB, int numA, int numB) async {
     if (statA && statB) {
       int sum = (numA * numB);
+      int position = customNumbers.indexOf(sum);
 
-      if (whosPlaying == "X") {
-        if (x.contains(sum) || o.contains(sum)) {
-          readyA = false;
-          readyB = false;
-          numberA = 0;
-          numberB = 0;
-          whosPlaying = "O";
-          await Future.delayed(Duration(milliseconds: 300));
-          await showGameAlert(context, "TIM A GAGAL ❌",
-              "Angka Yang Dipilih Sudah Ada di Papan.");
-          return;
-        } else {
-          x.add(sum);
-          readyA = false;
-          readyB = false;
-          numberA = 0;
-          numberB = 0;
-          whosPlaying = "O";
-
-          checkBoard();
+      if (x.contains(position) || o.contains(position)) {
+        await Future.delayed(Duration(milliseconds: 300));
+        await showGameAlert(
+            context,
+            "TIM ${whosPlaying == "X" ? "A" : "B"} GAGAL ❌",
+            "Angka Yang Dipilih Sudah Ada di Papan.");
+      } else {
+        if (whosPlaying == "X") {
+          x.add(position);
+          if (board[position] == "") {
+            setState(() {
+              board[position] = "X";
+            });
+          }
+          await checkPoint();
           await Future.delayed(Duration(milliseconds: 300));
           await showGameAlert(context, "TIM A BERHASIL ✔️",
               "Angka Yang Dipilih Berhasil Dimasukkan ke Papan.");
         }
-      } else if (whosPlaying == "O") {
-        if (x.contains(sum) || o.contains(sum)) {
-          readyA = false;
-          readyB = false;
-          numberA = 0;
-          numberB = 0;
-          whosPlaying = "O";
-          await Future.delayed(Duration(milliseconds: 300));
-          await showGameAlert(context, "TIM B GAGAL ❌",
-              "Angka Yang Dipilih Sudah Ada di Papan.");
-          return;
-        } else {
-          o.add(sum);
-          readyA = false;
-          readyB = false;
-          numberA = 0;
-          numberB = 0;
-          whosPlaying = "X";
-
-          checkBoard();
+        if (whosPlaying == "O") {
+          o.add(position);
+          if (board[position] == "") {
+            setState(() {
+              board[position] = "O";
+            });
+          }
+          await checkPoint();
           await Future.delayed(Duration(milliseconds: 300));
           await showGameAlert(context, "TIM B BERHASIL ✔️",
               "Angka Yang Dipilih Berhasil Dimasukkan ke Papan.");
+        }
+      }
+      print(x);
+      print(o);
+      readyA = false;
+      readyB = false;
+      numberA = 0;
+      numberB = 0;
+      whosPlaying = whosPlaying == "X" ? "O" : "X";
+    }
+  }
+
+  Future<void> horizontal(var i, usedList) async {
+    // ANGKA DARI 1 - 6
+    if (i + 1 <= 5 &&
+        i + 1 >= 1 &&
+        usedList.contains(i + 1) &&
+        usedList.contains(i + 2)) {
+      setState(() {
+        board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 1] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 2] = whosPlaying == "X" ? "🟥" : "🟦";
+      });
+      usedList.removeWhere((item) => [i, (i + 1), (i + 2)].contains(item));
+      whosPlaying == "X" ? pointforX++ : pointforO++;
+      print("Kombinasi Mendatar Pada Angka ${i}, ${i + 1}, ${i + 2}");
+    }
+    // ANGKA DARI 7 - 12
+    if (i + 1 <= 11 &&
+        i + 1 >= 7 &&
+        usedList.contains(i + 1) &&
+        usedList.contains(i + 2)) {
+      setState(() {
+        board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 1] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 2] = whosPlaying == "X" ? "🟥" : "🟦";
+      });
+      usedList.removeWhere((item) => [i, (i + 1), (i + 2)].contains(item));
+      whosPlaying == "X" ? pointforX++ : pointforO++;
+      print("Kombinasi Mendatar Pada Angka ${i}, ${i + 1}, ${i + 2}");
+    }
+    // ANGKA DARI 13 - 18
+    if (i + 1 <= 17 &&
+        i + 1 >= 13 &&
+        usedList.contains(i + 1) &&
+        usedList.contains(i + 2)) {
+      setState(() {
+        board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 1] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 2] = whosPlaying == "X" ? "🟥" : "🟦";
+      });
+      usedList.removeWhere((item) => [i, (i + 1), (i + 2)].contains(item));
+      whosPlaying == "X" ? pointforX++ : pointforO++;
+      print("Kombinasi Mendatar Pada Angka ${i}, ${i + 1}, ${i + 2}");
+    }
+    // ANGKA DARI 19 - 24
+    if (i + 1 <= 23 &&
+        i + 1 >= 19 &&
+        usedList.contains(i + 1) &&
+        usedList.contains(i + 2)) {
+      setState(() {
+        board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 1] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 2] = whosPlaying == "X" ? "🟥" : "🟦";
+      });
+      usedList.removeWhere((item) => [i, (i + 1), (i + 2)].contains(item));
+      whosPlaying == "X" ? pointforX++ : pointforO++;
+      print("Kombinasi Mendatar Pada Angka ${i}, ${i + 1}, ${i + 2}");
+    }
+    // ANGKA DARI 25 - 30
+    if (i + 1 <= 29 &&
+        i + 1 >= 25 &&
+        usedList.contains(i + 1) &&
+        usedList.contains(i + 2)) {
+      setState(() {
+        board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 1] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 2] = whosPlaying == "X" ? "🟥" : "🟦";
+      });
+      usedList.removeWhere((item) => [i, (i + 1), (i + 2)].contains(item));
+      whosPlaying == "X" ? pointforX++ : pointforO++;
+      print("Kombinasi Mendatar Pada Angka ${i}, ${i + 1}, ${i + 2}");
+    }
+    // ANGKA DARI 31 - 36
+    if (i + 1 <= 35 &&
+        i + 1 >= 31 &&
+        usedList.contains(i + 1) &&
+        usedList.contains(i + 2)) {
+      setState(() {
+        board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 1] = whosPlaying == "X" ? "🟥" : "🟦";
+        board[i + 2] = whosPlaying == "X" ? "🟥" : "🟦";
+      });
+      usedList.removeWhere((item) => [i, (i + 1), (i + 2)].contains(item));
+      whosPlaying == "X" ? pointforX++ : pointforO++;
+      print("Kombinasi Mendatar Pada Angka ${i}, ${i + 1}, ${i + 2}");
+    }
+  }
+
+  Future<void> checkPoint() async {
+    var usedList = whosPlaying == "X" ? x : o;
+
+    for (var i in List.from(usedList)) {
+      // KOMBINASI MENDATAR
+      await horizontal(i, usedList);
+
+      // KOMBINASI MENURUN
+      if (vertical.contains(i)) {
+        var i2 = usedList.contains(i + 6);
+        if (i2) {
+          var i3 = usedList.contains(i + 12);
+          if (i3) {
+            print("Ada Kombinasi Menurun.");
+            setState(() {
+              board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 6] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 12] = whosPlaying == "X" ? "🟥" : "🟦";
+            });
+            usedList
+                .removeWhere((item) => [i, (i + 6), (i + 12)].contains(item));
+            whosPlaying == "X" ? pointforX++ : pointforO++;
+          }
+        }
+      }
+
+      // KOMBINASI DIAGONAL KANAN
+      if (rightDiagonal.contains(i)) {
+        var i2 = usedList.contains(i + 7);
+        if (i2) {
+          var i3 = usedList.contains(i + 14);
+          if (i3) {
+            print("Ada Diagonal Kanan");
+            setState(() {
+              board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 7] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 14] = whosPlaying == "X" ? "🟥" : "🟦";
+            });
+            usedList
+                .removeWhere((item) => [i, (i + 7), (i + 14)].contains(item));
+            whosPlaying == "X" ? pointforX++ : pointforO++;
+          }
+        }
+      }
+
+      // KOMBINASI DIAGONAL KIRI
+      if (leftDiagonal.contains(i)) {
+        var i2 = usedList.contains(i + 5);
+        if (i2) {
+          var i3 = usedList.contains(i + 10);
+          if (i3) {
+            print("Ada kombinasi diagonal kiri.");
+            setState(() {
+              board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 5] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 10] = whosPlaying == "X" ? "🟥" : "🟦";
+            });
+            usedList
+                .removeWhere((item) => [i, (i + 5), (i + 10)].contains(item));
+            whosPlaying == "X" ? pointforX++ : pointforO++;
+          }
         }
       }
     }
@@ -155,8 +303,6 @@ class _GameState extends State<Game> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    print(x);
-    print(o);
 
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 53, 47, 68),
@@ -213,18 +359,18 @@ class _GameState extends State<Game> {
                   ],
                 ),
                 Text(
-                  isXTurn ? "Tim A (X)" : "Tim B (O)",
+                  whosPlaying == "X" ? "Poin Tim A (X)" : "Poin Tim B (O)",
                   style: GoogleFonts.fredoka(
                     textStyle: TextStyle(
                       fontSize: 30,
                       shadows: List.filled(
                           1,
                           Shadow(
-                            color: const Color.fromARGB(50, 250, 240, 230),
+                            color: const Color.fromARGB(25, 250, 240, 230),
                             offset: Offset(0, 0),
-                            blurRadius: 30,
+                            blurRadius: 15,
                           )),
-                      color: isXTurn
+                      color: whosPlaying == "X"
                           ? const Color.fromARGB(255, 255, 99, 99)
                           : const Color.fromARGB(255, 0, 215, 255),
                       fontWeight: FontWeight.bold,
@@ -270,11 +416,11 @@ class _GameState extends State<Game> {
                   shadows: List.filled(
                       1,
                       Shadow(
-                        color: const Color.fromARGB(50, 250, 240, 230),
+                        color: const Color.fromARGB(25, 250, 240, 230),
                         offset: Offset(0, 2),
-                        blurRadius: 20,
+                        blurRadius: 10,
                       )),
-                  color: isXTurn
+                  color: whosPlaying == "X"
                       ? const Color.fromARGB(255, 255, 99, 99)
                       : const Color.fromARGB(255, 0, 215, 255),
                   fontWeight: FontWeight.bold,
@@ -327,31 +473,16 @@ class _GameState extends State<Game> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 9,
+                  crossAxisCount: 6,
                 ),
-                itemCount: 81,
+                itemCount: 36,
                 itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      print("telah ditekan ${index}");
-                      if (board[index] == "") {
-                        bool thisTurn = currentPlayer(turnCount);
-                        setState(() {
-                          board[index] = thisTurn ? "X" : "O";
-                          numberA = 0;
-                          numberB = 0;
-                          turnCount++;
-                          isXTurn = currentPlayer(
-                              turnCount); // for showing current turn in UI
-                        });
-                      }
-                    },
-                    child: Block(
-                      index: index,
-                      boardIndex: board[index],
-                      isVisible: _isVisible,
-                      value: "${board[index] == "" ? index + 1 : board[index]}",
-                    ),
+                  return Block(
+                    index: index,
+                    number: customNumbers[index],
+                    boardIndex: board[index],
+                    isVisible: _isVisible,
+                    // value: "${board[index] == "" ? index + 1 : board[index]}",
                   );
                 },
               ),
@@ -401,33 +532,37 @@ class _GameState extends State<Game> {
                 Container(
                   width: screenWidth * 0.25,
                   height: 100,
-                  child: AnimatedButton(
-                    textButton: "Tim  A\nSiap",
-                    boxColor: const Color.fromARGB(255, 255, 99, 99),
-                    onTap: () async {
-                      if (isXTurn) {
-                        if (numberA == 0) {
-                          showGameAlert(context, "TIM A PILIH ULANG",
-                              "Harus Memilih Angka 1 Sampai 9.");
-                          return;
-                        } else {
-                          setState(() {
-                            readyA = true;
-                            turnCount++;
-                            isXTurn = currentPlayer(turnCount);
-                          });
-                          await showGameAlert(context, "TIM A SIAP",
-                              "Tim A telah Memilih angka.");
-                          await calculateSum(readyA, readyB, numberA, numberB);
-                          await Future.delayed(Duration(milliseconds: 300));
-                          await showGameAlert(
-                              context,
-                              "TIM ${isXTurn ? "A" : "B"} MULAI",
-                              "Tim ${isXTurn ? "A" : "B"} Dipersilahkan Memilih Angka.");
-                        }
-                      }
-                    },
-                  ),
+                  child: !isXTurn
+                      ? Opacity(opacity: 0.0)
+                      : AnimatedButton(
+                          textButton: "Tim  A\nSiap",
+                          boxColor: const Color.fromARGB(255, 255, 99, 99),
+                          onTap: () async {
+                            if (isXTurn) {
+                              if (numberA == 0) {
+                                showGameAlert(context, "TIM A PILIH ULANG",
+                                    "Harus Memilih Angka 1 Sampai 9.");
+                                return;
+                              } else {
+                                setState(() {
+                                  readyA = true;
+                                  turnCount++;
+                                  isXTurn = currentPlayer(turnCount);
+                                });
+                                await showGameAlert(context, "TIM A SIAP",
+                                    "Tim A telah Memilih angka.");
+                                await calculateSum(
+                                    readyA, readyB, numberA, numberB);
+                                await Future.delayed(
+                                    Duration(milliseconds: 300));
+                                await showGameAlert(
+                                    context,
+                                    "TIM ${isXTurn ? "A" : "B"} MULAI",
+                                    "Tim ${isXTurn ? "A" : "B"} Dipersilahkan Memilih Angka.");
+                              }
+                            }
+                          },
+                        ),
                 ),
                 Container(
                   width: screenWidth * 0.4,
@@ -472,34 +607,37 @@ class _GameState extends State<Game> {
                 Container(
                   width: screenWidth * 0.25,
                   height: 100,
-                  child: AnimatedButton(
-                    textButton: "Tim B\nSiap",
-                    boxColor: Color.fromARGB(255, 0, 215, 255),
-                    onTap: () async {
-                      if (!isXTurn) {
-                        if (numberB == 0) {
-                          showGameAlert(context, "TIM B PILIH ULANG",
-                              "Harus Memilih Angka 1 Sampai 9.");
-                          return;
-                        } else {
-                          print("sudah masuk B");
-                          setState(() {
-                            readyB = true;
-                            turnCount++;
-                            isXTurn = currentPlayer(turnCount);
-                          });
-                          await showGameAlert(context, "TIM B SIAP",
-                              "Tim B telah Memilih angka.");
-                          await calculateSum(readyA, readyB, numberA, numberB);
-                          await Future.delayed(Duration(milliseconds: 300));
-                          await showGameAlert(
-                              context,
-                              "TIM ${isXTurn ? "A" : "B"} MULAI",
-                              "Tim ${isXTurn ? "A" : "B"} Dipersilahkan Memilih Angka.");
-                        }
-                      }
-                    },
-                  ),
+                  child: isXTurn
+                      ? Opacity(opacity: 0.0)
+                      : AnimatedButton(
+                          textButton: "Tim B\nSiap",
+                          boxColor: Color.fromARGB(255, 0, 215, 255),
+                          onTap: () async {
+                            if (!isXTurn) {
+                              if (numberB == 0) {
+                                showGameAlert(context, "TIM B PILIH ULANG",
+                                    "Harus Memilih Angka 1 Sampai 9.");
+                                return;
+                              } else {
+                                setState(() {
+                                  readyB = true;
+                                  turnCount++;
+                                  isXTurn = currentPlayer(turnCount);
+                                });
+                                await showGameAlert(context, "TIM B SIAP",
+                                    "Tim B telah Memilih angka.");
+                                await calculateSum(
+                                    readyA, readyB, numberA, numberB);
+                                await Future.delayed(
+                                    Duration(milliseconds: 300));
+                                await showGameAlert(
+                                    context,
+                                    "TIM ${isXTurn ? "A" : "B"} MULAI",
+                                    "Tim ${isXTurn ? "A" : "B"} Dipersilahkan Memilih Angka.");
+                              }
+                            }
+                          },
+                        ),
                 ),
               ],
             )
