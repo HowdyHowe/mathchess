@@ -362,6 +362,8 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 53, 47, 68),
         body: Column(
@@ -461,9 +463,11 @@ class _GameState extends State<Game> {
             ),
 
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                    width: 150,
+                    width: screenWidth * 0.3,
                     height: 100,
                     child: ScoreBoard(
                       text: "Tim A: ",
@@ -472,20 +476,22 @@ class _GameState extends State<Game> {
                       symbolColor: const Color.fromARGB(255, 250, 99, 99),
                     )),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30),
-                  child: Text(
-                    "VS",
-                    style: GoogleFonts.fredoka(
-                      textStyle: TextStyle(
-                        fontSize: 40,
-                        color: const Color.fromARGB(255, 250, 240, 230),
-                        fontWeight: FontWeight.bold,
+                  width: screenWidth * 0.3,
+                  child: Center(
+                    child: Text(
+                      "VS",
+                      style: GoogleFonts.fredoka(
+                        textStyle: TextStyle(
+                          fontSize: 40,
+                          color: const Color.fromARGB(255, 250, 240, 230),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 Container(
-                    width: 150,
+                    width: screenWidth * 0.3,
                     height: 100,
                     child: ScoreBoard(
                       text: "Tim B: ",
@@ -566,7 +572,7 @@ class _GameState extends State<Game> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 100,
+                  width: screenWidth * 0.2,
                   height: 75,
                   child: !isXTurn
                       ? Opacity(opacity: 0.0)
@@ -601,6 +607,7 @@ class _GameState extends State<Game> {
                         ),
                 ),
                 Container(
+                  width: screenWidth * 0.5,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -610,10 +617,10 @@ class _GameState extends State<Game> {
                         child: Container(
                             child: numberA == ""
                                 ? Image.asset("assets/images/cartoon-0.png",
-                                    width: 60)
+                                    width: 50)
                                 : Image.asset(
                                     "assets/images/cartoon-${numberA}.png",
-                                    width: 60,
+                                    width: 50,
                                   )),
                       ),
                       Container(
@@ -630,17 +637,17 @@ class _GameState extends State<Game> {
                         child: Container(
                             child: numberB == ""
                                 ? Image.asset("assets/images/cartoon-0.png",
-                                    width: 60)
+                                    width: 50)
                                 : Image.asset(
                                     "assets/images/cartoon-${numberB}.png",
-                                    width: 60,
+                                    width: 50,
                                   )),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  width: 100,
+                  width: screenWidth * 0.2,
                   height: 75,
                   child: isXTurn
                       ? Opacity(opacity: 0.0)
