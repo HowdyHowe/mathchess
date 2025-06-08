@@ -121,6 +121,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
           decoration: BoxDecoration(
             color: widget.boxColor,
             borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.white, width: 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
