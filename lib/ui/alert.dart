@@ -23,7 +23,8 @@ Future<void> showGameAlert(BuildContext context, String title, String message,
           title: Center(
             child: Text(
               title,
-              style: GoogleFonts.fredoka(
+              style: TextStyle(
+                fontFamily: "Fredoka",
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: titleColor ?? Colors.white,
@@ -33,7 +34,8 @@ Future<void> showGameAlert(BuildContext context, String title, String message,
           content: Text(
             message,
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white70),
+            style: TextStyle(
+                fontFamily: "Fredoka", fontSize: 18, color: Colors.white70),
           ),
           actions: [
             TextButton(

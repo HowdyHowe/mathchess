@@ -12,7 +12,6 @@ dependencies:
   google_fonts: ^6.2.1
   shared_preferences: ^2.5.3
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -32,3 +31,18 @@ flutter:
     - assets/images/cartoon-8.png
     - assets/images/cartoon-9.png
     - assets/images/cartoon-10.png
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Fredoka-Bold.ttf
+          weight: 700
+    - family: Chewy
+      fonts:
+        - asset: assets/fonts/Chewy-Regular.ttf
+          weight: 400
+    - family: CaveatBrush
+      fonts:
+        - asset: assets/fonts/CaveatBrush-Regular.ttf
+          weight: 400

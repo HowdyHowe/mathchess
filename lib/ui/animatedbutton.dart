@@ -135,19 +135,18 @@ class _AnimatedButtonState extends State<AnimatedButton>
           child: Text(
             widget.textButton,
             textAlign: TextAlign.center,
-            style: GoogleFonts.caveatBrush(
-              textStyle: TextStyle(
-                fontSize: 20,
-                color: const Color.fromARGB(255, 250, 240, 230),
-                fontWeight: FontWeight.bold,
-                shadows: [
-                  Shadow(
-                    color: const Color.fromARGB(150, 53, 47, 58),
-                    offset: Offset(0, 0),
-                    blurRadius: 30,
-                  ),
-                ],
-              ),
+            style: TextStyle(
+              fontFamily: "Fredoka",
+              fontSize: 20,
+              color: const Color.fromARGB(255, 250, 240, 230),
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: const Color.fromARGB(150, 53, 47, 58),
+                  offset: Offset(0, 0),
+                  blurRadius: 30,
+                ),
+              ],
             ),
           ),
         ),

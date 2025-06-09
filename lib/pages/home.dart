@@ -43,8 +43,8 @@ class _HomeState extends State<Home> {
               margin: EdgeInsets.all(10),
               child: Text(
                 "MATHCHESS",
-                style: GoogleFonts.fredoka(
-                  textStyle: TextStyle(
+                style:  TextStyle(
+                  fontFamily: "Fredoka",
                     fontSize: 50,
                     shadows: List.filled(
                         1,
@@ -56,7 +56,6 @@ class _HomeState extends State<Home> {
                     color: const Color.fromARGB(255, 255, 99, 99),
                     fontWeight: FontWeight.bold,
                   ),
-                ),
               ),
             ),
             SizedBox(

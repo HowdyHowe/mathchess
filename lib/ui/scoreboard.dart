@@ -56,36 +56,34 @@ class _ScoreBoardState extends State<ScoreBoard> {
             children: [
               Text(
                 widget.text,
-                style: GoogleFonts.fredoka(
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    shadows: List.filled(
-                        1,
-                        Shadow(
-                          color: const Color.fromARGB(50, 250, 240, 230),
-                          offset: Offset(0, 0),
-                          blurRadius: 30,
-                        )),
-                    color: const Color.fromARGB(255, 250, 240, 230),
-                    fontWeight: FontWeight.bold,
-                  ),
+                style: TextStyle(
+                  fontFamily: "Fredoka",
+                  fontSize: 20,
+                  shadows: List.filled(
+                      1,
+                      Shadow(
+                        color: const Color.fromARGB(50, 250, 240, 230),
+                        offset: Offset(0, 0),
+                        blurRadius: 30,
+                      )),
+                  color: const Color.fromARGB(255, 250, 240, 230),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 "${widget.pointfor}",
-                style: GoogleFonts.fredoka(
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                    shadows: List.filled(
-                        1,
-                        Shadow(
-                          color: const Color.fromARGB(50, 250, 240, 230),
-                          offset: Offset(0, 0),
-                          blurRadius: 30,
-                        )),
-                    color: const Color.fromARGB(255, 250, 240, 230),
-                    fontWeight: FontWeight.bold,
-                  ),
+                style: TextStyle(
+                  fontFamily: "Fredoka",
+                  fontSize: 20,
+                  shadows: List.filled(
+                      1,
+                      Shadow(
+                        color: const Color.fromARGB(50, 250, 240, 230),
+                        offset: Offset(0, 0),
+                        blurRadius: 30,
+                      )),
+                  color: const Color.fromARGB(255, 250, 240, 230),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],

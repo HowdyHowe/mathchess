@@ -317,28 +317,29 @@ class _GameState extends State<Game> {
           }
         }
       }
+    }
 
-      for (var i in List.from(usedList)) {
-        // KOMBINASI DIAGONAL KANAN
-        if (rightDiagonal.contains(i)) {
-          var i2 = usedList.contains(i + 7);
-          if (i2) {
-            print(i2);
-            var i3 = usedList.contains(i + 14);
-            if (i3) {
-              print("Ada Diagonal Kanan");
-              setState(() {
-                board[i] = whosPlaying == "X" ? "🟥" : "🟦";
-                board[i + 7] = whosPlaying == "X" ? "🟥" : "🟦";
-                board[i + 14] = whosPlaying == "X" ? "🟥" : "🟦";
-              });
-              usedList
-                  .removeWhere((item) => [i, (i + 7), (i + 14)].contains(item));
-              whosPlaying == "X" ? pointforX++ : pointforO++;
-            }
+    for (var i in List.from(usedList)) {
+      // KOMBINASI DIAGONAL KANAN
+      if (rightDiagonal.contains(i)) {
+        var i2 = usedList.contains(i + 7);
+        if (i2) {
+          print(i2);
+          var i3 = usedList.contains(i + 14);
+          if (i3) {
+            print("Ada Diagonal Kanan");
+            setState(() {
+              board[i] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 7] = whosPlaying == "X" ? "🟥" : "🟦";
+              board[i + 14] = whosPlaying == "X" ? "🟥" : "🟦";
+            });
+            usedList
+                .removeWhere((item) => [i, (i + 7), (i + 14)].contains(item));
+            whosPlaying == "X" ? pointforX++ : pointforO++;
           }
         }
       }
+
       // KOMBINASI DIAGONAL KIRI
       if (leftDiagonal.contains(i)) {
         var i2 = usedList.contains(i + 5);
@@ -363,7 +364,6 @@ class _GameState extends State<Game> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 53, 47, 68),
         body: Column(
@@ -398,21 +398,20 @@ class _GameState extends State<Game> {
                 ),
                 Text(
                   whosPlaying == "X" ? "Poin Tim A (X)" : "Poin Tim B (O)",
-                  style: GoogleFonts.fredoka(
-                    textStyle: TextStyle(
-                      fontSize: 30,
-                      shadows: List.filled(
-                          1,
-                          Shadow(
-                            color: const Color.fromARGB(25, 250, 240, 230),
-                            offset: Offset(0, 0),
-                            blurRadius: 15,
-                          )),
-                      color: whosPlaying == "X"
-                          ? const Color.fromARGB(255, 255, 99, 99)
-                          : const Color.fromARGB(255, 0, 215, 255),
-                      fontWeight: FontWeight.bold,
-                    ),
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontSize: 30,
+                    shadows: List.filled(
+                        1,
+                        Shadow(
+                          color: const Color.fromARGB(25, 250, 240, 230),
+                          offset: Offset(0, 0),
+                          blurRadius: 15,
+                        )),
+                    color: whosPlaying == "X"
+                        ? const Color.fromARGB(255, 255, 99, 99)
+                        : const Color.fromARGB(255, 0, 215, 255),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 GestureDetector(
@@ -444,21 +443,20 @@ class _GameState extends State<Game> {
 
             Text(
               _timeLeft.toStringAsFixed(2),
-              style: GoogleFonts.fredoka(
-                textStyle: TextStyle(
-                  fontSize: 20,
-                  shadows: [
-                    Shadow(
-                      color: Color.fromARGB(25, 250, 240, 230),
-                      offset: Offset(0, 2),
-                      blurRadius: 10,
-                    )
-                  ],
-                  color: whosPlaying == "X"
-                      ? Color.fromARGB(255, 255, 99, 99)
-                      : Color.fromARGB(255, 0, 215, 255),
-                  fontWeight: FontWeight.bold,
-                ),
+              style: TextStyle(
+                fontFamily: "Fredoka",
+                fontSize: 20,
+                shadows: [
+                  Shadow(
+                    color: Color.fromARGB(25, 250, 240, 230),
+                    offset: Offset(0, 2),
+                    blurRadius: 10,
+                  )
+                ],
+                color: whosPlaying == "X"
+                    ? Color.fromARGB(255, 255, 99, 99)
+                    : Color.fromARGB(255, 0, 215, 255),
+                fontWeight: FontWeight.bold,
               ),
             ),
 
@@ -467,7 +465,7 @@ class _GameState extends State<Game> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                    width: screenWidth * 0.3,
+                    width: screenWidth * 0.4,
                     height: 100,
                     child: ScoreBoard(
                       text: "Tim A: ",
@@ -476,22 +474,21 @@ class _GameState extends State<Game> {
                       symbolColor: const Color.fromARGB(255, 250, 99, 99),
                     )),
                 Container(
-                  width: screenWidth * 0.3,
+                  width: screenWidth * 0.2,
                   child: Center(
                     child: Text(
                       "VS",
-                      style: GoogleFonts.fredoka(
-                        textStyle: TextStyle(
-                          fontSize: 40,
-                          color: const Color.fromARGB(255, 250, 240, 230),
-                          fontWeight: FontWeight.bold,
-                        ),
+                      style: TextStyle(
+                        fontFamily: "Fredoka",
+                        fontSize: 40,
+                        color: const Color.fromARGB(255, 250, 240, 230),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
                 Container(
-                    width: screenWidth * 0.3,
+                    width: screenWidth * 0.4,
                     height: 100,
                     child: ScoreBoard(
                       text: "Tim B: ",
@@ -572,7 +569,7 @@ class _GameState extends State<Game> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: screenWidth * 0.2,
+                  width: screenWidth * 0.25,
                   height: 75,
                   child: !isXTurn
                       ? Opacity(opacity: 0.0)
@@ -592,8 +589,6 @@ class _GameState extends State<Game> {
                                   isXTurn = !isXTurn;
                                   textCount = "O";
                                 });
-                                await showGameAlert(context, "TIM A SIAP",
-                                    "Tim A telah Memilih angka.");
                                 await Future.delayed(
                                     Duration(milliseconds: 300));
                                 await showGameAlert(
@@ -607,7 +602,7 @@ class _GameState extends State<Game> {
                         ),
                 ),
                 Container(
-                  width: screenWidth * 0.5,
+                  width: screenWidth * 0.4,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -647,7 +642,7 @@ class _GameState extends State<Game> {
                   ),
                 ),
                 Container(
-                  width: screenWidth * 0.2,
+                  width: screenWidth * 0.25,
                   height: 75,
                   child: isXTurn
                       ? Opacity(opacity: 0.0)
@@ -667,8 +662,6 @@ class _GameState extends State<Game> {
                                   isXTurn = !isXTurn;
                                   textCount = "X";
                                 });
-                                await showGameAlert(context, "TIM B SIAP",
-                                    "Tim B telah Memilih angka.");
                                 await Future.delayed(
                                     Duration(milliseconds: 300));
                                 await showGameAlert(
